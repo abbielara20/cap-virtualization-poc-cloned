@@ -21,7 +21,6 @@ cds watch
 
 Folder | Purpose  
 --|--  
-`app/` | UI frontends  
 `srv/` | Service definitions and logic  
 `db/`  | Data models and persistence  
 `docs/` | Project documentation  

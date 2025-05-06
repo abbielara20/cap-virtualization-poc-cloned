@@ -9,6 +9,7 @@ File or Folder       | Purpose
 `.pipeline/`         | Pipeline deployment configuration
 `db/`                | Your domain models and data
 `srv/`               | Your service models and code
+`setup/`             | Setup files for completing project setup
 `package.json`       | Project metadata and configuration
 `readme.md`          | This getting started guide
 `Jenkinsfile`        | Jenkins pipeline definition

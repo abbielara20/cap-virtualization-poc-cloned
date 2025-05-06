@@ -18,9 +18,6 @@ const readmeTemplatePath = path.join(setupDir, 'README.template.md');
 const finalReadmePath = path.join(root, 'README.md');
 const thisScriptPath = path.join(setupDir, 'finalise-setup.js');
 
-
-
-
 // Files to remove or archive after setup
 const setupFiles = [thisScriptPath, readmeTemplatePath, path.join(root, configFilename)];
 
@@ -134,14 +131,8 @@ function runSetupWithValues(answers) {
   console.log('\n🔄 Replacing placeholders...');
   replacePlaceholders(root, answers);
   generateFinalReadme(answers);
-
   // fs.writeFileSync(path.join(setupDir, configFilename), JSON.stringify(answers, null, 2), 'utf8');
-  fs.renameSync(configPath, path.join(setupDir, configFilename));
-
-  // oldpath = configPath
-  // newpath = path.join(setupDir, configFilename);
-
-
+  fs.rename(configPath, path.join(setupDir, configFilename), () => { return });
   if (cleanAfter) cleanup();
   console.log('\n✅ Setup complete!');
   rl.close();
