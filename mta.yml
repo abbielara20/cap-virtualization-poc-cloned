@@ -1,0 +1,52 @@
+_schema-version: 3.3.0
+ID: __APP_ID__
+version: 1.0.0
+description: "__DESCRIPTION__"
+parameters:
+  enable-parallel-deployments: true
+build-parameters:
+  before-all:
+    - builder: custom
+      commands:
+        - npm ci
+        - npx cds build --production
+modules:
+  - name: __APP_ID__-srv
+    type: nodejs
+    path: gen/srv
+    parameters:
+      instances: 1
+      buildpack: nodejs_buildpack
+    build-parameters:
+      builder: npm-ci
+    provides:
+      - name: srv-api # required by consumers of CAP services (e.g. approuter)
+        properties:
+          srv-url: ${default-url}
+    requires:
+      - name: __APP_ID__-auth
+      - name: __APP_ID__-db
+
+  - name: __APP_ID__-db-deployer
+    type: hdb
+    path: gen/db
+    parameters:
+      buildpack: nodejs_buildpack
+    requires:
+      - name: __APP_ID__-db
+
+resources:
+  - name: __APP_ID__-auth
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: xsuaa
+      service-plan: application
+      path: ./xs-security.json
+      config:
+        xsappname: __APP_ID__-${org}-${space}
+        tenant-mode: dedicated
+  - name: __APP_ID__-db
+    type: com.sap.xs.hdi-container
+    parameters:
+      service: hana
+      service-plan: hdi-shared

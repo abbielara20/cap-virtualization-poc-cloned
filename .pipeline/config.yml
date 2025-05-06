@@ -1,0 +1,7 @@
+stages:
+  # Define which stages to run
+  Build:
+    mavenExecute: false
+  Deploy:
+    cfDeploy:
+      deployTool: mta
