@@ -1,7 +1,21 @@
+general:
+  productiveBranch: main
+
 stages:
-  # Define which stages to run
-  Build:
-    mavenExecute: false
-  Deploy:
-    cfDeploy:
-      deployTool: mta
+  Build MTA: true
+  Deploy to CF: true
+
+steps:
+  npmExecuteScripts:
+    runScripts: []
+  mtaBuild:
+    buildTarget: "CF"
+    mtaBuildTool: "mbt"
+  cloudFoundryDeploy:
+    deployTool: "mtaDeployPlugin"
+    mtaPath: "mta_archives/your-cap-app.mtar"
+    cloudFoundry:
+      apiEndpoint: "${env.CF_API_ENDPOINT}"
+      org: "${env.CF_ORG}"
+      space: "${env.CF_SPACE}"
+      credentialsId: "${env.CF_CREDENTIALS}"

@@ -1,7 +1,7 @@
 @Library('piper-lib-os') _
 
 pipeline {
-  agent any
+  agent { label 'cap' }
 
   parameters {
     choice(name: 'DEPLOY_ENV', choices: ['dev', 'preprod', 'prod'], description: 'Choose target environment')
@@ -19,15 +19,18 @@ pipeline {
     stage('Run Piper Pipeline') {
       steps {
         script {
+          def apiEndpoint   = credentials("cf-api-${params.DEPLOY_ENV}")
+          def org           = credentials("cf-org-${params.DEPLOY_ENV}")
+          def space         = credentials("cf-space-${params.DEPLOY_ENV}")
+          def credentialsId = "cf-credentials-${params.DEPLOY_ENV}"
+                    
           piperPipeline(
-            customDefaults: [
-              '.pipeline/config.yml'
-            ],
+            customDefaults: ['.pipeline/config.yml'],
             environment: [
-              CF_API_ENDPOINT : "${env.CF_API_ENDPOINT}",
-              CF_ORG          : "${env.CF_ORG}",
-              CF_SPACE        : "${env.CF_SPACE}",
-              CF_CREDENTIALS  : "${env.CF_CREDENTIALS}"
+              CF_API_ENDPOINT : apiEndpoint,
+              CF_ORG          : org,
+              CF_SPACE        : space,
+              CF_CREDENTIALS  : credentialsId
             ]
           )
         }
