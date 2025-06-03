@@ -1,0 +1,32 @@
+{
+    "compilerOptions": {
+        "isolatedModules": true,
+        "forceConsistentCasingInFileNames": true,
+        "sourceMap": true,
+        "preserveConstEnums": true,
+        "strict": true,
+        "strictNullChecks": true,
+        "target": "ESNext",
+        "module": "NodeNext",
+        "rootDir": "./",
+        "baseUrl": "./",
+        "allowJs": true,
+        "esModuleInterop": true,
+        "inlineSources": true,
+        "moduleResolution": "NodeNext",
+        "skipLibCheck": true,
+        "paths": {
+            "#cds-models/*": [
+                "./@cds-models/*"
+            ]
+        },
+        "types": [
+            "jest",
+            "node",
+            "@cap-js/cds-types",
+        ],
+    },
+    "include": [
+        "./srv/**/*"
+, "test"    ]
+}
