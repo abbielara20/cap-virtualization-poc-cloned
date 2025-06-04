@@ -126,12 +126,34 @@ function cleanup() {
   if (fs.existsSync(setupDir)) fs.rmSync(setupDir, { recursive: true, force: true });;
 }
 
+function deleteIfExists(filePath) {
+  try {
+    if (fs.existsSync(filePath)) {
+      fs.rmSync(filePath, { force: true });
+      console.log(`🧹 Removed placeholder: ${filePath}`);
+    }
+  } catch (err) {
+    console.warn(`⚠️ Failed to delete ${filePath}:`, err.message);
+  }
+}
+
 // Finalise
 function runSetupWithValues(answers) {
   console.log('\n🔄 Replacing placeholders...');
   replacePlaceholders(root, answers);
   generateFinalReadme(answers);
-  // fs.writeFileSync(path.join(setupDir, configFilename), JSON.stringify(answers, null, 2), 'utf8');
+
+  // Remove placeholder typescript files required by Jenkins for template Build
+  const placeholderFiles = [
+    path.join('srv', '.template-placeholder.ts'),
+    path.join('test', '_template-placeholder.test.ts')
+  ];
+
+  for (const filePath of placeholderFiles) {
+    const absPath = path.join(root, filePath);
+    deleteIfExists(absPath);
+  }
+
   fs.rename(configPath, path.join(setupDir, configFilename), () => { return });
   if (cleanAfter) cleanup();
   console.log('\n✅ Setup complete!');

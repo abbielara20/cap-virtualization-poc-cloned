@@ -59,4 +59,11 @@ You can also force prompts by running:
 
 ```
 node setup/finalise-setup.js --prompt --clean
+
 ```
+
+#### Post setup clean out
+
+🧹 The setup script will automatically delete the following placeholders used to make the template build-compatible:
+- `srv/.template-placeholder.ts`
+- `test/_template-placeholder.test.ts`
