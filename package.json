@@ -21,6 +21,9 @@
     "@sap/cds-dk": "^8",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.33.1",
+    "@typescript-eslint/parser": "^8.33.1",
+    "eslint": "^9.28.0",
     "jest": "^29.7.0",
     "ts-jest": "^29.3.3",
     "tsx": "^4.19.4",
@@ -28,7 +31,9 @@
   },
   "scripts": {
     "start": "cds-serve",
-    "watch": "cds-tsx w"
+    "watch": "cds-tsx w",
+    "lint": "eslint --ext .ts .",
+    "test": "jest --ci"
   },
   "cds": {
     "requires": {

@@ -7,8 +7,24 @@ node('cap') {
     setupCommonPipelineEnvironment script: this
   }
 
-  stage('Build') {
-    mtaBuild script: this
+  stage('Install Dependencies') {
+    sh 'npm ci'
   }
 
+  stage('TypeScript Build Check') {
+    sh 'npx tsc --noEmit'
+  }
+
+  stage('Lint') {
+    sh 'npm run lint'
+  }
+
+
+  stage('Unit Tests') {
+    sh 'npx jest --ci'
+  }
+
+  stage('MTA Build') {
+    mtaBuild script: this
+  }
 }
