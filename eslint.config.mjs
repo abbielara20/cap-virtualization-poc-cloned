@@ -18,27 +18,37 @@ export default [
             '.vscode/',
             '.idea/',
             '@cds-models',
-            'srv/.template-placeholder.ts',
-        ],
+            'srv/.template-placeholder.ts'
+        ]
     },
+
+    // SAP CDS base rules
     ...cds.recommended,
+
     {
         files: ['**/*.ts'],
         languageOptions: {
             parser: parserTs,
             ecmaVersion: 'latest',
-            sourceType: 'module',
+            sourceType: 'module'
         },
         plugins: {
-            '@typescript-eslint': eslintPluginTs,
+            '@typescript-eslint': eslintPluginTs
         },
         rules: {
-            '@typescript-eslint/no-unused-vars': ['warn'],
+            '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
             '@typescript-eslint/no-explicit-any': 'warn',
-            '@typescript-eslint/explicit-function-return-type': ['warn'],
-            '@typescript-eslint/consistent-type-definitions': ['warn', 'interface'],
-        },
+            '@typescript-eslint/explicit-function-return-type': 'off',
+            '@typescript-eslint/consistent-type-definitions': ['warn', 'type'],
+            '@typescript-eslint/consistent-type-imports': ['warn', {
+                prefer: 'type-imports',
+                disallowTypeAnnotations: false
+            }]
+
+            // Removed: prefer-optional-chain, prefer-nullish-coalescing (type-aware)
+        }
     },
+
     {
         files: ['test/**/*.ts'],
         languageOptions: {
@@ -53,6 +63,9 @@ export default [
                 afterEach: 'readonly',
                 jest: 'readonly'
             }
+        },
+        rules: {
+            '@typescript-eslint/no-explicit-any': 'off'
         }
     }
 ]
