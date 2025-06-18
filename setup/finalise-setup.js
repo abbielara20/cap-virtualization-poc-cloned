@@ -233,8 +233,7 @@ class SetupManager {
     // Show setup progress
     const steps = [
       { name: 'Replace placeholders', fn: () => this.replacePlaceholders(variables) },
-      { name: 'Generate README', fn: () => this.generateReadme(variables) },
-      { name: 'Remove template files', fn: () => this.removeTemplateFiles() }
+      { name: 'Generate README', fn: () => this.generateReadme(variables) }
     ];
 
     for (const step of steps) {
