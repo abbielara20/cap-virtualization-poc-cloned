@@ -14,10 +14,11 @@ target/
 .che/
 .gen/
 
-# MTA
+# Build and test
 *_mta_build_tmp
 *.mtar
 mta_archives/
+coverage/
 
 # Other
 .DS_Store
@@ -33,4 +34,4 @@ IDEs
 .idea
 
 # @cap-js/cds-typer
-@cds-models
+@cds-models/
