@@ -9,7 +9,7 @@ build-parameters:
     - builder: custom
       commands:
         - npm ci
-        - npx cds build --production
+        - npm run build:cf
 modules:
   - name: __APP_ID__-srv
     type: nodejs

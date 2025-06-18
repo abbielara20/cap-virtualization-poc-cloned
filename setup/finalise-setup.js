@@ -21,11 +21,6 @@ class SetupManager {
       this.configPath
     ];
 
-    this.templatePlaceholderFiles = [
-      'srv/.template-placeholder.ts',
-      'test/_template-placeholder.test.ts'
-    ];
-
     this.questions = [
       {
         key: 'APP_ID',
@@ -183,31 +178,6 @@ class SetupManager {
       console.log('README.md generated from template.\n');
     } catch (error) {
       console.error(`ERROR: Failed to generate README: ${error.message}\n`);
-    }
-  }
-
-  removeTemplateFiles() {
-    console.log('Removing template placeholder files...');
-    let filesRemoved = 0;
-
-    for (const filePath of this.templatePlaceholderFiles) {
-      const fullPath = path.join(this.root, filePath);
-
-      if (fs.existsSync(fullPath)) {
-        try {
-          fs.unlinkSync(fullPath);
-          console.log(`  Removed: ${filePath}`);
-          filesRemoved++;
-        } catch (error) {
-          console.warn(`  WARNING: Failed to remove ${filePath}: ${error.message}`);
-        }
-      }
-    }
-
-    if (filesRemoved > 0) {
-      console.log(`Removed ${filesRemoved} template files.\n`);
-    } else {
-      console.log('No template files to remove.\n');
     }
   }
 
@@ -372,7 +342,7 @@ async function main() {
 
 // Handle process termination gracefully
 process.on('SIGINT', () => {
-  console.log('\n\n⚠️ Setup cancelled by user.');
+  console.log('\n\nSetup cancelled by user.');
   process.exit(0);
 });
 

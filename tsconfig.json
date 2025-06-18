@@ -26,7 +26,12 @@
             "@cap-js/cds-types",
         ],
     },
+    "exclude": [
+        "node_modules",
+        "gen"
+    ],
     "include": [
-        "./srv/**/*"
-, "test"    ]
+        "./srv/**/*",
+        "test"
+    ]
 }

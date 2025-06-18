@@ -18,7 +18,9 @@ export default [
             '.vscode/',
             '.idea/',
             '@cds-models',
-            'srv/.template-placeholder.ts'
+            'srv/.template-placeholder.ts',
+            'mta_archives/',
+            'test-results/'
         ]
     },
 
@@ -50,7 +52,7 @@ export default [
     },
 
     {
-        files: ['test/**/*.ts'],
+        files: ['test/**/*.ts', '**/*.test.ts', '**/*.spec.ts'],
         languageOptions: {
             parser: parserTs,
             ecmaVersion: 'latest',
@@ -61,6 +63,8 @@ export default [
                 expect: 'readonly',
                 beforeEach: 'readonly',
                 afterEach: 'readonly',
+                beforeAll: 'readonly',
+                afterAll: 'readonly',
                 jest: 'readonly'
             }
         },
