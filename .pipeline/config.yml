@@ -5,11 +5,3 @@ general:
 steps:
   mtaBuild:
     buildTarget: 'CF'
-
-  cloudFoundryDeploy:
-    deployTool: 'mtaDeployPlugin'
-    cloudFoundry:
-      org: 'ZESPRI-DEVOPS-DEV'          
-      space: 'DEV'                      
-      apiEndpoint: 'https://api.cf.ap11.hana.ondemand.com/'  
-      credentialsId: 'cf-credentials-dev'     

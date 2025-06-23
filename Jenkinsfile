@@ -5,6 +5,9 @@
 node('cap') {
   /* groovylint-disable-next-line VariableTypeRequired */
     def branch = env.BRANCH_NAME ?: 'unknown'
+    def landscape = determineLandscape(branch)
+
+    echo "Branch: ${branch}, Landscape: ${landscape}"
 
     stage('Prepare') {
         checkout scm
@@ -100,17 +103,142 @@ node('cap') {
         script {
       if (env.CHANGE_ID) {
         echo 'Skipping deploy — this is a Pull Request build'
-            } else if (branch == 'develop') {
-        echo 'Deploying to: DEV'
-        cloudFoundryDeploy script: this
-        echo 'Deploy completed'
-            } else if (branch.startsWith('release/')) {
-        echo 'Would deploy to: PRE-PROD'
-            } else if (branch == 'main') {
-        echo 'Would deploy to: PROD'
+            } else if (branch == 'develop' || branch == 'bpa/develop') {
+        deployToDev(landscape)
+            } else if (branch.startsWith('release/') || branch.startsWith('bpa/release/')) {
+        deployToStaging(landscape)
+            } else if (branch == 'main' || branch == 'bpa/main') {
+        deployToProd(landscape)
             } else {
         echo "No deploy target defined for branch: ${branch}"
       }
         }
     }
+}
+
+String determineLandscape(String branch) {
+  if (branch.startsWith('bpa/')) {
+    return 'BPA'
+  }
+  return 'DEVOPS'  // Default for all standard branches
+}
+
+Map getLandscapeConfig(String landscape, String environment) {
+  def configs = [
+        'DEVOPS': [
+            'DEV': [
+                org: 'ZESPRI-DEVOPS-DEV',
+                space: 'DEV',
+                apiEndpoint: 'https://api.cf.ap11.hana.ondemand.com/',
+                credentialsId: 'cf-credentials-dev'
+            ],
+            'PREPROD': [
+                org: 'ZESPRI-DEVOPS-PREPROD',
+                space: 'PREPROD',
+                apiEndpoint: 'https://api.cf.ap11.hana.ondemand.com/',
+                credentialsId: 'cf-credentials-staging'
+            ],
+            'PROD': [
+                org: 'ZESPRI-DEVOPS-PROD',
+                space: 'PROD',
+                apiEndpoint: 'https://api.cf.ap11.hana.ondemand.com/',
+                credentialsId: 'cf-credentials-prod'
+            ]
+        ],
+        'BPA': [
+            'DEV': [
+                org: 'Zespri Group Limited_zespri-build-process-automation-dev-sryylsb5',
+                space: 'DEV',
+                apiEndpoint: 'https://api.cf.jp10.hana.ondemand.com/',
+                credentialsId: 'cf-credentials-bpa-dev'
+            ],
+            'PREPROD': [
+                org: 'ZESPRI-BPA-PREPROD-PLACEHOLDER',
+                space: 'PREPROD',
+                apiEndpoint: 'https://api.cf.jp10.hana.ondemand.com/',
+                credentialsId: 'cf-credentials-bpa-staging'
+            ],
+            'PROD': [
+                org: 'ZESPRI-BPA-PROD-PLACEHOLDER',
+                space: 'PROD',
+                apiEndpoint: 'https://api.cf.jp10.hana.ondemand.com/',
+                credentialsId: 'cf-credentials-bpa-prod'
+            ]
+        ]
+    ]
+
+  if (!configs[landscape]) {
+    throw new Exception("Unknown landscape: ${landscape}")
+  }
+  if (!configs[landscape][environment]) {
+    throw new Exception("Unknown environment '${environment}' for landscape '${landscape}'")
+  }
+
+  return configs[landscape][environment]
+}
+
+void deployToDev(String landscape) {
+  def config = getLandscapeConfig(landscape, 'DEV')
+
+  githubNotify context: "deploy-dev-${landscape.toLowerCase()}", status: 'PENDING', description: "${landscape} DEV deployment started"
+  try {
+    echo "Deploying to: ${landscape} DEV"
+    cloudFoundryDeploy(
+            script: this,
+            org: config.org,
+            space: config.space,
+            apiEndpoint: config.apiEndpoint,
+            cfCredentialsId: config.credentialsId,
+            deployTool: 'mtaDeployPlugin'
+        )
+    echo "Deploy to ${landscape} DEV completed"
+    githubNotify context: "deploy-dev-${landscape.toLowerCase()}", status: 'SUCCESS', description: "${landscape} DEV deployment successful"
+    } catch (err) {
+    githubNotify context: "deploy-dev-${landscape.toLowerCase()}", status: 'FAILURE', description: "${landscape} DEV deployment failed"
+    throw err
+  }
+}
+
+void deployToStaging(String landscape) {
+  def config = getLandscapeConfig(landscape, 'PREPROD')
+
+  githubNotify context: "deploy-staging-${landscape.toLowerCase()}", status: 'PENDING', description: "${landscape} PREPROD deployment started"
+  try {
+    echo "Deploying to: ${landscape} PREPROD"
+    cloudFoundryDeploy(
+            script: this,
+            org: config.org,
+            space: config.space,
+            apiEndpoint: config.apiEndpoint,
+            cfCredentialsId: config.credentialsId,
+            deployTool: 'mtaDeployPlugin'
+        )
+    echo "Deploy to ${landscape} PREPROD completed"
+    githubNotify context: "deploy-staging-${landscape.toLowerCase()}", status: 'SUCCESS', description: "${landscape} PREPROD deployment successful"
+    } catch (err) {
+    githubNotify context: "deploy-staging-${landscape.toLowerCase()}", status: 'FAILURE', description: "${landscape} PREPROD deployment failed"
+    throw err
+  }
+}
+
+void deployToProd(String landscape) {
+  def config = getLandscapeConfig(landscape, 'PROD')
+
+  githubNotify context: "deploy-prod-${landscape.toLowerCase()}", status: 'PENDING', description: "${landscape} PROD deployment started"
+  try {
+    echo "Deploying to: ${landscape} PROD"
+    cloudFoundryDeploy(
+            script: this,
+            org: config.org,
+            space: config.space,
+            apiEndpoint: config.apiEndpoint,
+            cfCredentialsId: config.credentialsId,
+            deployTool: 'mtaDeployPlugin'
+        )
+    echo "Deploy to ${landscape} PROD completed"
+    githubNotify context: "deploy-prod-${landscape.toLowerCase()}", status: 'SUCCESS', description: "${landscape} PROD deployment successful"
+    } catch (err) {
+    githubNotify context: "deploy-prod-${landscape.toLowerCase()}", status: 'FAILURE', description: "${landscape} PROD deployment failed"
+    throw err
+  }
 }
