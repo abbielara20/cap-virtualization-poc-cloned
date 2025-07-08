@@ -41,50 +41,44 @@ node('cap') {
     stage('Lint') {
         githubNotify context: 'lint', status: 'PENDING', description: 'Linting started'
         try {
-      sh 'npm run lint'
-      githubNotify context: 'lint', status: 'SUCCESS', description: 'Lint passed'
-    } catch (err) {
-      githubNotify context: 'lint', status: 'FAILURE', description: 'Lint failed'
-      throw err
+          sh 'npm run lint'
+          githubNotify context: 'lint', status: 'SUCCESS', description: 'Lint passed'
+        } catch (err) {
+          githubNotify context: 'lint', status: 'FAILURE', description: 'Lint failed'
+          throw err
         }
     }
 
     stage('Unit Tests') {
-        githubNotify context: 'test', status: 'PENDING', description: 'Tests running'
+      githubNotify context: 'test', status: 'PENDING', description: 'Tests running'
 
-        script {
-      // Check for test files first
-      /* groovylint-disable-next-line VariableTypeRequired */
-      def testFileCount = sh(script: '''
-        find . -type f \\( -name "*.test.js" -o -name "*.test.ts" -o -name "*.spec.js" -o -name "*.spec.ts" \\) \\
-        ! -path "./node_modules/*" ! -path "./gen/*" | wc -l
-      ''', returnStdout: true).trim() as Integer
+      script {
+        // Check for test files first
+        /* groovylint-disable-next-line VariableTypeRequired */
+        def testFileCount = sh(script: '''
+          find . -type f \\( -name "*.test.js" -o -name "*.test.ts" -o -name "*.spec.js" -o -name "*.spec.ts" \\) \\
+          ! -path "./node_modules/*" ! -path "./gen/*" | wc -l
+        ''', returnStdout: true).trim() as Integer
 
-      if (testFileCount > 0) {
-        try {
-          sh 'npm run test'
-          githubNotify context: 'test', status: 'SUCCESS', description: 'Tests passed'
+        if (testFileCount > 0) {
+          try {
+            sh 'npm run test'
+            githubNotify context: 'test', status: 'SUCCESS', description: 'Tests passed'
 
-          // Publish test results if available
-          publishTestResults testResultsPattern: 'test-results/jest-junit.xml', allowEmptyResults: true
-          publishHTML([
-            allowMissing: true,
-            alwaysLinkToLastBuild: true,
-            keepAll: true,
-            reportDir: 'coverage',
-            reportFiles: 'index.html',
-            reportName: 'Coverage Report'
-          ])
-        } catch (err) {
-          githubNotify context: 'test', status: 'FAILURE', description: 'Tests failed'
-          throw err
+            // Archive any generated reports
+            archiveArtifacts artifacts: 'coverage/**/*', allowEmptyArchive: true
+            archiveArtifacts artifacts: 'test-results/**/*', allowEmptyArchive: true
+
+          } catch (err) {
+            githubNotify context: 'test', status: 'FAILURE', description: 'Tests failed'
+            throw err
+          }
+        } else {
+          echo '⚠️ WARNING: No test files found in the project.'
+          echo '   Consider adding unit tests to improve code quality and catch regressions early.'
+          githubNotify context: 'test', status: 'SUCCESS', description: 'No tests found - skipped'
         }
-      } else {
-        echo '⚠️ WARNING: No test files found in the project.'
-        echo '   Consider adding unit tests to improve code quality and catch regressions early.'
-        githubNotify context: 'test', status: 'SUCCESS', description: 'No tests found - skipped'
       }
-        }
     }
 
     stage('MTA Build') {
