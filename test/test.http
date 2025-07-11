@@ -1,0 +1,15 @@
+###
+GET http://localhost:4004/catalog/getData()
+
+
+###
+POST http://localhost:4004/catalog/postData
+Content-Type: application/json
+
+{
+    "payload": [{
+    "ID": 11,
+    "Name": "test order 1",
+    "Description": "this is a test entry"
+    }]
+}

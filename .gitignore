@@ -30,7 +30,6 @@ default-env.json
 *.flattened-pom.xml
 
 IDEs
-.vscode
 .idea
 
 # @cap-js/cds-typer

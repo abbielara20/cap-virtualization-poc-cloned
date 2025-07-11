@@ -1,5 +1,6 @@
 import type { Books } from '#cds-models/my/bookshop';
 import cds from '@sap/cds';
+const logger = cds.log("CatService");
 
 /**
  * Implementation for CatalogService
@@ -10,8 +11,19 @@ export default class CatalogService extends cds.ApplicationService {
 
     // Register event handlers
     this.on('READ', 'Books', this.onReadBooks);
+    this.on('READ', 'getData', this.getData);
 
     return super.init();
+  }
+
+  private async getData() {
+    const books = await cds.run(SELECT.from(cds.entities.Books));
+    const authors = await cds.run(SELECT.from(cds.entities.Authors))
+    const allData = books.concat(authors);
+    logger.info("getDataLog");
+    logger.info(JSON.stringify(allData))
+    logger.info("log local");
+    return JSON.stringify(allData);
   }
 
   /**

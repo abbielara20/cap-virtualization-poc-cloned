@@ -26,6 +26,7 @@ modules:
     requires:
       - name: cap-virtualization-poc-auth
       - name: cap-virtualization-poc-db
+      - name: new-sap-cloud-logging-instance
 
   - name: cap-virtualization-poc-db-deployer
     type: hdb
@@ -50,3 +51,5 @@ resources:
     parameters:
       service: hana
       service-plan: hdi-shared
+  - name: new-sap-cloud-logging-instance
+    type: org.cloudfoundry.existing-service
