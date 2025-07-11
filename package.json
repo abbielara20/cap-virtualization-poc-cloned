@@ -1,8 +1,8 @@
 {
-  "name": "__APP_ID__",
+  "name": "cap-virtualization-poc",
   "version": "1.0.0",
-  "description": "__DESCRIPTION__",
-  "repository": "__REPOSITORY__",
+  "description": "POC virtualize S4 table to BTP and expose api",
+  "repository": "zespri-international-ltd/cap-virtualization-poc",
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {

@@ -1,5 +1,5 @@
 {
-    "xsappname": "__APP_ID__",
+    "xsappname": "cap-virtualization-poc",
     "tenant-mode": "dedicated",
     "scopes": [],
     "attributes": [],

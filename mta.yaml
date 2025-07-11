@@ -1,7 +1,7 @@
 _schema-version: 3.3.0
-ID: __APP_ID__
+ID: cap-virtualization-poc
 version: 1.0.0
-description: "__DESCRIPTION__"
+description: "POC virtualize S4 table to BTP and expose api"
 parameters:
   enable-parallel-deployments: true
 build-parameters:
@@ -11,7 +11,7 @@ build-parameters:
         - npm ci
         - npm run build:cf
 modules:
-  - name: __APP_ID__-srv
+  - name: cap-virtualization-poc-srv
     type: nodejs
     path: gen/srv
     parameters:
@@ -24,28 +24,28 @@ modules:
         properties:
           srv-url: ${default-url}
     requires:
-      - name: __APP_ID__-auth
-      - name: __APP_ID__-db
+      - name: cap-virtualization-poc-auth
+      - name: cap-virtualization-poc-db
 
-  - name: __APP_ID__-db-deployer
+  - name: cap-virtualization-poc-db-deployer
     type: hdb
     path: gen/db
     parameters:
       buildpack: nodejs_buildpack
     requires:
-      - name: __APP_ID__-db
+      - name: cap-virtualization-poc-db
 
 resources:
-  - name: __APP_ID__-auth
+  - name: cap-virtualization-poc-auth
     type: org.cloudfoundry.managed-service
     parameters:
       service: xsuaa
       service-plan: application
       path: ./xs-security.json
       config:
-        xsappname: __APP_ID__-${org}-${space}
+        xsappname: cap-virtualization-poc-${org}-${space}
         tenant-mode: dedicated
-  - name: __APP_ID__-db
+  - name: cap-virtualization-poc-db
     type: com.sap.xs.hdi-container
     parameters:
       service: hana
