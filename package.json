@@ -1,8 +1,8 @@
 {
-  "name": "cap-virtualization-poc",
+  "name": "cap-virt-proj",
   "version": "1.0.0",
   "description": "POC virtualize S4 table to BTP and expose api",
-  "repository": "zespri-international-ltd/cap-virtualization-poc",
+  "repository": "zespri-international-ltd/cap-virt-proj",
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
@@ -14,6 +14,8 @@
     "@opentelemetry/exporter-trace-otlp-grpc": "^0.57.2",
     "@opentelemetry/host-metrics": "^0.36.0",
     "@sap/cds": "^9",
+    "@sap/hdi-deploy": "^5.4.2",
+    "@sap/textbundle": "^5.4.0",
     "@sap/xssec": "^4",
     "express": "^4"
   },
@@ -68,6 +70,9 @@
             }
           }
         }
+      },
+      "db": {
+        "kind": "hana"
       }
     },
     "sql": {

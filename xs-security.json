@@ -1,5 +1,5 @@
 {
-    "xsappname": "cap-virtualization-poc",
+    "xsappname": "cap-virt-proj",
     "tenant-mode": "dedicated",
     "scopes": [],
     "attributes": [],

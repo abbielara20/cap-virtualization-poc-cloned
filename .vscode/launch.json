@@ -17,7 +17,11 @@
       ],
       "skipFiles": [
         "<node_internals>/**"
-      ]
+      ],
+      "envFile": "${workspaceFolder}/.env1",
+      "env": {
+        "CDS_LOG_FORMAT": "json"
+      }
     },
     {
       "name": "cds serve with logs to telemetry",
@@ -38,6 +42,27 @@
       "envFile": "${workspaceFolder}/.env",
       "env": {
         "CDS_LOG_FORMAT": "json"
+      }
+    },
+    {
+      "name": "Run cap-virtualization-poc-cloned-2",
+      "request": "launch",
+      "type": "node",
+      "cwd": "${workspaceFolder}",
+      "runtimeExecutable": "cds",
+      "args": [
+        "serve",
+        "--in-memory?"
+      ],
+      "console": "internalConsole",
+      "internalConsoleOptions": "openOnSessionStart",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "envFile": "${workspaceFolder}/.env1",
+      "env": {
+        "NODE_ENV": "development",
+        "run.config": "{\"handlerId\":\"cap_run_config_handler_id\",\"runnableId\":\"{\\\"projectPath\\\":\\\"/home/user/projects/cap-virtualization-poc-cloned\\\",\\\"profileName\\\":\\\"development\\\"}\"}"
       }
     }
   ]

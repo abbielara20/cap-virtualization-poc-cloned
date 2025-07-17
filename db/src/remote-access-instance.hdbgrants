@@ -1,0 +1,26 @@
+{
+    "Remote_Source_Access": {
+        "object_owner": {
+            "global_object_privileges": [
+                {
+                    "name": "P4D_HANA_PROJECT",
+                    "type": "REMOTE SOURCE",
+                    "privileges": [
+                        "CREATE VIRTUAL TABLE"
+                    ]
+                }
+            ]
+        },
+        "application_user": {
+            "global_object_privileges": [
+                {
+                    "name": "P4D_HANA_PROJECT",
+                    "type": "REMOTE SOURCE",
+                    "privileges": [
+                        "CREATE VIRTUAL TABLE"
+                    ]
+                }
+            ]
+        }
+    }
+}

@@ -1,5 +1,5 @@
 _schema-version: 3.3.0
-ID: cap-virtualization-poc
+ID: cap-virt-proj
 version: 1.0.0
 description: "POC virtualize S4 table to BTP and expose api"
 parameters:
@@ -11,7 +11,7 @@ build-parameters:
         - npm ci
         - npm run build:cf
 modules:
-  - name: cap-virtualization-poc-srv
+  - name: cap-virt-proj-srv
     type: nodejs
     path: gen/srv
     parameters:
@@ -24,32 +24,43 @@ modules:
         properties:
           srv-url: ${default-url}
     requires:
-      - name: cap-virtualization-poc-auth
-      - name: cap-virtualization-poc-db
+      - name: cap-virt-proj-auth
+      - name: cap-virt-proj-2-db
       - name: new-sap-cloud-logging-instance
 
-  - name: cap-virtualization-poc-db-deployer
+  - name: cap-virt-proj-db-deployer
     type: hdb
     path: gen/db
     parameters:
       buildpack: nodejs_buildpack
     requires:
-      - name: cap-virtualization-poc-db
+      - name: cap-virt-proj-2-db
+      - name: remote-access-instance
+        group: SERVICE_REPLACEMENTS
+        properties:
+          key: Remote_Source_Access
+          service: ~{the-service-name}
 
 resources:
-  - name: cap-virtualization-poc-auth
+  - name: cap-virt-proj-auth
     type: org.cloudfoundry.managed-service
     parameters:
       service: xsuaa
       service-plan: application
       path: ./xs-security.json
       config:
-        xsappname: cap-virtualization-poc-${org}-${space}
+        xsappname: cap-virt-proj-${org}-${space}
         tenant-mode: dedicated
-  - name: cap-virtualization-poc-db
+  - name: cap-virt-proj-2-db
     type: com.sap.xs.hdi-container
     parameters:
       service: hana
       service-plan: hdi-shared
   - name: new-sap-cloud-logging-instance
     type: org.cloudfoundry.existing-service
+  - name: remote-access-instance
+    type: org.cloudfoundry.existing-service
+    parameters:
+      service-name: remote-access-instance
+    properties:
+      the-service-name: ${service-name}
