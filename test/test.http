@@ -5,7 +5,9 @@ GET http://localhost:4004/catalog/getVirtualData()
 GET http://localhost:4004/catalog/view_loginlogs
 
 ###
-GET http://localhost:4004/catalog/view_USR02(mandt = 000, bname = 'BATCH_USER')?$expand=profiles
+GET http://localhost:4004/catalog/view_USR02
+
+(mandt = 000, bname = 'BATCH_USER')?$expand=profiles
 
 # ###
 # POST http://localhost:4004/catalog/postData

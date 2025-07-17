@@ -6,7 +6,7 @@ const logger = cds.log("OperationsClass");
 
 module.exports = class OperationsClass {
 
-    // Regular SELECT statement
+    // Using READ statement with association for Virtual and HANA tables
     static async getVirtualData() {
         const where = {
             bname: "BATCH_USER"
@@ -19,10 +19,20 @@ module.exports = class OperationsClass {
         return result;
     }
 
-    // SELECT with JOIN
+    // Using READ prepared statement with JOIN for HANA tables
     static async getUserLoginLogs() {
         const result = await cds.run(sql.QUERIES.PROFILES_JOIN_LOGINLOGS, ["Admin"])
         logger.info(JSON.stringify(result));
         return result;
     }
+
+    // Using READ prepared statement with JOIN for Virtual and HANA tables
+
+    // Using WRITE statement for Virtual table
+
+    // Using WRITE statement for HANA tables
+
+    // Using READ and WRITE statement for Virtual table
+
+    // Using READ and WRITE statement for HANA table
 }

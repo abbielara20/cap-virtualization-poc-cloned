@@ -8,13 +8,15 @@ module.exports = class CatalogService extends cds.ApplicationService {
 
   init() {
 
-    this.on("getVirtualData", async () => {
+    this.on("READ", "view_USR02", async () => {
       return await operations.getVirtualData();
     });
 
-    this.on("READ", "view_loginlogs", async() => {
+    this.on("READ", "view_loginlogs", async () => {
       return await operations.getUserLoginLogs();
     })
+
+    this.on("getVirtualData", async () => { })
 
     return super.init();
   }
