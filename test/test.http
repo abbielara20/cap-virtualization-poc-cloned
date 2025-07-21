@@ -1,22 +1,20 @@
 ###
-GET http://localhost:4004/catalog/getVirtualData()
+GET http://localhost:4004/catalog/getJoinVirtualData()
 
 ###
 GET http://localhost:4004/catalog/view_loginlogs
 
 ###
-GET http://localhost:4004/catalog/view_USR02
+GET http://localhost:4004/catalog/view_USR01
+# (mandt = 000, bname = 'BATCH_USER')?$expand=profiles
 
-(mandt = 000, bname = 'BATCH_USER')?$expand=profiles
+####
+POST http://localhost:4004/catalog/view_USR05
+Content-Type: application/json
 
-# ###
-# POST http://localhost:4004/catalog/postData
-# Content-Type: application/json
-
-# {
-#     "payload": [{
-#     "ID": 11,
-#     "Name": "test order 1",
-#     "Description": "this is a test entry"
-#     }]
-# }
+{
+    "mandt": "000",
+    "bname": "BATCH_USER",
+    "parid": "AAA",
+    "parva": "AAA"   
+}

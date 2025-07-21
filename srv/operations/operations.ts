@@ -7,14 +7,18 @@ const logger = cds.log("OperationsClass");
 module.exports = class OperationsClass {
 
     // Using READ statement with association for Virtual and HANA tables
-    static async getVirtualData() {
+    // Filter from multiple tables
+    static async getVirtualData(): Promise<unknown> {
         const where = {
-            bname: "BATCH_USER"
+            ["assoc_usr02.class"]: "TEST_USER",
+            ["assoc_usr04.modbe"]: "TRIPATHIA",
+            ["assoc_usr05.parva"]: "ZTMSHEET",
+            ["profiles.active"]: true
         };
         const columns = [
-            "*", "profiles.name", "profiles.role", "profiles.department"
+            "*", "assoc_usr02.pwdchgdate", "assoc_usr04.modda", "assoc_usr04.modti", "assoc_usr05.parva", "profiles.role"
         ]
-        const result = await HelperClass.fnRead(sql.TABLES.V_USR02, where, columns);
+        const result = await HelperClass.fnRead(sql.TABLES.V_USR01, where, columns);
         logger.info(JSON.stringify(result));
         return result;
     }
@@ -27,12 +31,18 @@ module.exports = class OperationsClass {
     }
 
     // Using READ prepared statement with JOIN for Virtual and HANA tables
+    // Filter from multiple tables
+    static async getJoinVirtualData() {
+        const result = await cds.run(sql.QUERIES.VIRTUAL_JOIN_HANA, ["TEST_USER", "TRIPATHIA", "ZTMSHEET", true])
+        logger.info(JSON.stringify(result));
+        return result;
+    }
 
     // Using WRITE statement for Virtual table
-
-    // Using WRITE statement for HANA tables
-
-    // Using READ and WRITE statement for Virtual table
-
-    // Using READ and WRITE statement for HANA table
+    // Expect error
+    static async insertVirtualData<T>(data: T[]): Promise<unknown> {
+        const result = await HelperClass.fnCreate(sql.TABLES.V_USR05, [data])
+        logger.info(JSON.stringify(result));
+        return result;
+    }
 }
