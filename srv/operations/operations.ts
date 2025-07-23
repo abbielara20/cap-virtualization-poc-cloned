@@ -10,8 +10,8 @@ module.exports = class OperationsClass {
     // Filter from multiple tables
     static async getVirtualData(): Promise<unknown> {
         const where = {
-            ["assoc_usr02.class"]: "TEST_USER",
-            ["assoc_usr04.modbe"]: "TRIPATHIA",
+            ["assoc_usr02.class"]: { in: ["TEST_USER", "DEVELOPER"] },
+            ["assoc_usr04.modbe"]: { in: ["TRIPATHIA", "BOLISS", "AGUILINGD", "PRADHANK", "JARDIA"] },
             ["assoc_usr05.parva"]: "ZTMSHEET",
             ["profiles.active"]: true
         };
